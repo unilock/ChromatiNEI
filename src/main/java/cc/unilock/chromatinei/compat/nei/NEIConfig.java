@@ -1,7 +1,7 @@
 package cc.unilock.chromatinei.compat.nei;
 
-import Reika.ChromatiCraft.ModInterface.NEI.CastingTableHandler;
 import cc.unilock.chromatinei.Tags;
+import cc.unilock.chromatinei.compat.nei.handler.CastingTableHandler;
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 
