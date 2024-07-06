@@ -1,5 +1,6 @@
 package cc.unilock.chromatinei;
 
+import cc.unilock.chromatinei.compat.IMCHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import org.apache.logging.log4j.LogManager;
@@ -20,5 +21,6 @@ public class ChromatiNEI {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         LOGGER.info("Hello from ChromatiNEI!");
+        IMCHandler.init();
     }
 }
