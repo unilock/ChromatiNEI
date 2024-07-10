@@ -20,6 +20,8 @@ import Reika.ChromatiCraft.Registry.CrystalElement;
 import Reika.DragonAPI.Instantiable.Recipe.ItemMatch;
 import Reika.DragonAPI.Libraries.IO.ReikaTextureHelper;
 import Reika.DragonAPI.Libraries.Rendering.ReikaGuiAPI;
+import cc.unilock.chromatinei.util.CCUtil;
+import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -33,14 +35,17 @@ import java.util.Map;
 public class CastingTableHandler extends TemplateRecipeHandler {
     public class CachedCastingRecipe extends CachedRecipe {
         public final CastingRecipe recipe;
+        public final boolean visible;
 
         private CachedCastingRecipe(CastingRecipe c) {
             recipe = c;
+            visible = CCUtil.playerCanSee(c.getOutput());
         }
 
         @Override
         public ArrayList<PositionedStack> getIngredients() {
             ArrayList<PositionedStack> stacks = new ArrayList<>();
+            if (!visible) return stacks;
             ItemStack[] items = recipe.getArrayForDisplay();
             int dx = 48;
             int dy = recipe instanceof MultiBlockCastingRecipe ? 79 : 34;
@@ -72,6 +77,7 @@ public class CastingTableHandler extends TemplateRecipeHandler {
 
         @Override
         public PositionedStack getResult() {
+            if (!visible) return null;
             return new PositionedStack(recipe.getOutput(), 66, 4);
         }
     }
@@ -83,7 +89,7 @@ public class CastingTableHandler extends TemplateRecipeHandler {
 
     @Override
     public String getGuiTexture() {
-        return "/assets/chromatinei/textures/gui/table5.png";
+        return "/assets/chromatinei/textures/gui/table2.png";
     }
 
     public String getGuiTexture(int recipe) {
@@ -103,12 +109,13 @@ public class CastingTableHandler extends TemplateRecipeHandler {
 
     @Override
     public void drawBackground(int recipe) {
-        GL11.glColor4f(1, 1, 1, 1);
         CachedCastingRecipe c = (CachedCastingRecipe)arecipes.get(recipe);
+        if (!c.visible) return;
         CastingRecipe r = c.recipe;
         int h = r instanceof PylonCastingRecipe ? 225 : r instanceof MultiBlockCastingRecipe ? 178 : 88;
-        ReikaTextureHelper.bindTexture(ChromatiCraft.class, this.getGuiTexture(recipe));
+        GL11.glColor4f(1, 1, 1, 1);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
+        ReikaTextureHelper.bindTexture(ChromatiCraft.class, this.getGuiTexture(recipe));
         ReikaGuiAPI.instance.drawTexturedModalRectWithDepth(0, 0, 0, 0, 148, h, ReikaGuiAPI.NEI_DEPTH);
     }
 
@@ -124,16 +131,21 @@ public class CastingTableHandler extends TemplateRecipeHandler {
     public void loadCraftingRecipes(ItemStack result) {
         if (result != null) {
             ArrayList<CastingRecipe> li = RecipesCastingTable.instance.getAllRecipesMaking(result);
-            for (CastingRecipe castingRecipe : li)
+            for (CastingRecipe castingRecipe : li) {
                 arecipes.add(new CachedCastingRecipe(castingRecipe));
+            }
         }
     }
 
     @Override
     public void loadUsageRecipes(ItemStack ingredient) {
         ArrayList<CastingRecipe> li = RecipesCastingTable.instance.getAllRecipesUsing(ingredient);
-        for (CastingRecipe castingRecipe : li)
-            arecipes.add(new CachedCastingRecipe(castingRecipe));
+        for (CastingRecipe castingRecipe : li) {
+            CachedCastingRecipe c = new CachedCastingRecipe(castingRecipe);
+            if (c.visible) {
+                arecipes.add(c);
+            }
+        }
     }
 
     @Override
@@ -143,8 +155,14 @@ public class CastingTableHandler extends TemplateRecipeHandler {
 
     @Override
     public void drawExtras(int recipe) {
-        CachedCastingRecipe r = (CachedCastingRecipe)arecipes.get(recipe);
-        if (r.recipe instanceof PylonCastingRecipe p) {
+        CachedCastingRecipe c = (CachedCastingRecipe)arecipes.get(recipe);
+        if (!c.visible) {
+            GuiDraw.drawString("There is still much to learn...", 0, 0, 0, false);
+            return;
+        } else {
+            // TODO: text widget that takes you to lexicon page
+        }
+        if (c.recipe instanceof PylonCastingRecipe p) {
             ElementTagCompound tag = p.getRequiredAura();
             for (CrystalElement e : tag.elementSet()) {
                 int w = 4;
