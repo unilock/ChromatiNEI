@@ -42,8 +42,8 @@ public class CastingTableHandler extends TemplateRecipeHandler {
         public ArrayList<PositionedStack> getIngredients() {
             ArrayList<PositionedStack> stacks = new ArrayList<>();
             ItemStack[] items = recipe.getArrayForDisplay();
-            int dx = 53;
-            int dy = recipe instanceof MultiBlockCastingRecipe ? 51 : 31;
+            int dx = 48;
+            int dy = recipe instanceof MultiBlockCastingRecipe ? 79 : 34;
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     ItemStack is = items[i+j*3];
@@ -52,8 +52,6 @@ public class CastingTableHandler extends TemplateRecipeHandler {
                     }
                 }
             }
-            dx = 9;
-            dy = 6;
             if (recipe instanceof MultiBlockCastingRecipe) {
                 Map<List<Integer>, ItemMatch> map = ((MultiBlockCastingRecipe)recipe).getAuxItems();
                 for (List<Integer> key : map.keySet()) {
@@ -64,9 +62,9 @@ public class CastingTableHandler extends TemplateRecipeHandler {
                     int sy = Integer.compare(k, 0);
                     int tx = Math.abs(i) == 2 ? 38 : 64;
                     int ty = Math.abs(k) == 2 ? 38 : 63;
-                    int px = 80+sx*(tx);
-                    int py = 75+sy*(ty);
-                    stacks.add(new PositionedStack(is.getCycledItem(), px-dx, py-dy));
+                    int px = 66+sx*(tx);
+                    int py = 97+sy*(ty);
+                    stacks.add(new PositionedStack(is.getCycledItem(), px, py));
                 }
             }
             return stacks;
@@ -74,7 +72,7 @@ public class CastingTableHandler extends TemplateRecipeHandler {
 
         @Override
         public PositionedStack getResult() {
-            return new PositionedStack(recipe.getOutput(), 180, 6);
+            return new PositionedStack(recipe.getOutput(), 66, 4);
         }
     }
 
@@ -85,17 +83,16 @@ public class CastingTableHandler extends TemplateRecipeHandler {
 
     @Override
     public String getGuiTexture() {
-        return "/Reika/ChromatiCraft/Textures/GUIs/table2.png";
+        return "/assets/chromatinei/textures/gui/table5.png";
     }
 
     public String getGuiTexture(int recipe) {
         CastingCrafting c = (CastingCrafting)arecipes.get(recipe);
         CastingRecipe r = c.recipe;
         return switch (r.type) {
-            case CRAFTING, TEMPLE -> "/Reika/ChromatiCraft/Textures/GUIs/table2.png";
-            case MULTIBLOCK -> "/Reika/ChromatiCraft/Textures/GUIs/table4.png";
-            case PYLON -> "/Reika/ChromatiCraft/Textures/GUIs/table5.png";
-            default -> "/Reika/ChromatiCraft/Textures/GUIs/table.png";
+            case CRAFTING, TEMPLE -> "/assets/chromatinei/textures/gui/table2.png";
+            case MULTIBLOCK -> "/assets/chromatinei/textures/gui/table4.png";
+            case PYLON -> "/assets/chromatinei/textures/gui/table5.png";
         };
     }
 
@@ -109,10 +106,10 @@ public class CastingTableHandler extends TemplateRecipeHandler {
         GL11.glColor4f(1, 1, 1, 1);
         CastingCrafting c = (CastingCrafting)arecipes.get(recipe);
         CastingRecipe r = c.recipe;
-        int h = r instanceof PylonCastingRecipe ? 187 : r instanceof MultiBlockCastingRecipe ? 150 : 114;
+        int h = r instanceof PylonCastingRecipe ? 225 : r instanceof MultiBlockCastingRecipe ? 178 : 88;
         ReikaTextureHelper.bindTexture(ChromatiCraft.class, this.getGuiTexture(recipe));
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        ReikaGuiAPI.instance.drawTexturedModalRectWithDepth(0, 0, 9, 6, 207, h, ReikaGuiAPI.NEI_DEPTH);
+        ReikaGuiAPI.instance.drawTexturedModalRectWithDepth(0, 0, 0, 0, 148, h, ReikaGuiAPI.NEI_DEPTH);
     }
 
     @Override
@@ -151,18 +148,9 @@ public class CastingTableHandler extends TemplateRecipeHandler {
             ElementTagCompound tag = p.getRequiredAura();
             for (CrystalElement e : tag.elementSet()) {
                 int w = 4;
-                int x = 174+e.ordinal()%4*w*2;
-                int y1 = 29+e.ordinal()/4*40;
-                int y = 64+e.ordinal()/4*40;
-                ReikaGuiAPI.instance.drawRect(x, y1, x+w, y, e.getJavaColor().darker().darker().getRGB());
+                int x = 12+e.ordinal()*w*2;
+                ReikaGuiAPI.instance.drawRect(x, 188, x+w, 223, e.getJavaColor().darker().darker().getRGB());
             }
         }
-		/*
-		ReikaGuiAPI.instance.drawTexturedModalRect(6, 17, 176, 44, 11, 43);
-		BlastTempRecipe r = ((BlastTempRecipe)arecipes.get(recipe));
-		String s = String.format("%dC", r.getRecipeTemperature());
-		FontRenderer f = Minecraft.getMinecraft().fontRenderer;
-		ReikaGuiAPI.instance.drawCenteredStringNoShadow(f, s, f.getStringWidth(s)/2-2*(s.length()/5), 61, 0);
-		 */
     }
 }

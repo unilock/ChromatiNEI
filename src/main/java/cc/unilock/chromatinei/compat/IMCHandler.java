@@ -16,8 +16,6 @@ public class IMCHandler {
         nbt.setString("modId", "ChromatiCraft");
         nbt.setBoolean("modRequired", true);
         nbt.setString("itemName", workstation);
-        nbt.setInteger("handlerHeight", 187);
-        nbt.setInteger("handlerWidth", 207);
         nbt.setInteger("maxRecipesPerPage", 1);
         FMLInterModComms.sendMessage("NotEnoughItems", "registerHandlerInfo", nbt);
     }
