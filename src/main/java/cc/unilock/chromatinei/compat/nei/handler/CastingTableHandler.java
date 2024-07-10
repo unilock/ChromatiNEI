@@ -31,10 +31,10 @@ import java.util.List;
 import java.util.Map;
 
 public class CastingTableHandler extends TemplateRecipeHandler {
-    public class CastingCrafting extends CachedRecipe {
+    public class CachedCastingRecipe extends CachedRecipe {
         public final CastingRecipe recipe;
 
-        private CastingCrafting(CastingRecipe c) {
+        private CachedCastingRecipe(CastingRecipe c) {
             recipe = c;
         }
 
@@ -87,7 +87,7 @@ public class CastingTableHandler extends TemplateRecipeHandler {
     }
 
     public String getGuiTexture(int recipe) {
-        CastingCrafting c = (CastingCrafting)arecipes.get(recipe);
+        CachedCastingRecipe c = (CachedCastingRecipe)arecipes.get(recipe);
         CastingRecipe r = c.recipe;
         return switch (r.type) {
             case CRAFTING, TEMPLE -> "/assets/chromatinei/textures/gui/table2.png";
@@ -104,7 +104,7 @@ public class CastingTableHandler extends TemplateRecipeHandler {
     @Override
     public void drawBackground(int recipe) {
         GL11.glColor4f(1, 1, 1, 1);
-        CastingCrafting c = (CastingCrafting)arecipes.get(recipe);
+        CachedCastingRecipe c = (CachedCastingRecipe)arecipes.get(recipe);
         CastingRecipe r = c.recipe;
         int h = r instanceof PylonCastingRecipe ? 225 : r instanceof MultiBlockCastingRecipe ? 178 : 88;
         ReikaTextureHelper.bindTexture(ChromatiCraft.class, this.getGuiTexture(recipe));
@@ -125,7 +125,7 @@ public class CastingTableHandler extends TemplateRecipeHandler {
         if (result != null) {
             ArrayList<CastingRecipe> li = RecipesCastingTable.instance.getAllRecipesMaking(result);
             for (CastingRecipe castingRecipe : li)
-                arecipes.add(new CastingCrafting(castingRecipe));
+                arecipes.add(new CachedCastingRecipe(castingRecipe));
         }
     }
 
@@ -133,7 +133,7 @@ public class CastingTableHandler extends TemplateRecipeHandler {
     public void loadUsageRecipes(ItemStack ingredient) {
         ArrayList<CastingRecipe> li = RecipesCastingTable.instance.getAllRecipesUsing(ingredient);
         for (CastingRecipe castingRecipe : li)
-            arecipes.add(new CastingCrafting(castingRecipe));
+            arecipes.add(new CachedCastingRecipe(castingRecipe));
     }
 
     @Override
@@ -143,7 +143,7 @@ public class CastingTableHandler extends TemplateRecipeHandler {
 
     @Override
     public void drawExtras(int recipe) {
-        CastingCrafting r = (CastingCrafting)arecipes.get(recipe);
+        CachedCastingRecipe r = (CachedCastingRecipe)arecipes.get(recipe);
         if (r.recipe instanceof PylonCastingRecipe p) {
             ElementTagCompound tag = p.getRequiredAura();
             for (CrystalElement e : tag.elementSet()) {
