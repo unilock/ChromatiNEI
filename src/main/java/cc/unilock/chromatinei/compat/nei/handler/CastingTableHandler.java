@@ -23,6 +23,7 @@ import Reika.DragonAPI.Libraries.Rendering.ReikaGuiAPI;
 import cc.unilock.chromatinei.util.CCUtil;
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
@@ -159,8 +160,6 @@ public class CastingTableHandler extends TemplateRecipeHandler {
         if (!c.visible) {
             GuiDraw.drawString("There is still much to learn...", 0, 0, 0, false);
             return;
-        } else {
-            // TODO: text widget that takes you to lexicon page
         }
         if (c.recipe instanceof PylonCastingRecipe p) {
             ElementTagCompound tag = p.getRequiredAura();
@@ -169,6 +168,17 @@ public class CastingTableHandler extends TemplateRecipeHandler {
                 int x = 12+e.ordinal()*w*2;
                 ReikaGuiAPI.instance.drawRect(x, 188, x+w, 223, e.getJavaColor().darker().darker().getRGB());
             }
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(GuiRecipe<?> gui, int button, int recipe) {
+        CachedCastingRecipe c = (CachedCastingRecipe)arecipes.get(recipe);
+        if (c.visible && button == 0 && gui.isMouseOver(c.getResult(), recipe)) {
+            CCUtil.loadLexiconRecipe(c.recipe.getOutput());
+            return true;
+        } else {
+            return super.mouseClicked(gui, button, recipe);
         }
     }
 }
