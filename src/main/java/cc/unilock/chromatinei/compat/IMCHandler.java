@@ -7,6 +7,8 @@ public class IMCHandler {
     public static void init() {
         sendHandler("cc.unilock.chromatinei.compat.nei.handler.CastingTableHandler", "ChromatiCraft:chromaticraft_item_placer:5");
         sendCatalyst("cc.unilock.chromatinei.compat.nei.handler.CastingTableHandler", "ChromatiCraft:chromaticraft_item_placer:5");
+        sendHandler("cc.unilock.chromatinei.compat.nei.handler.PoolHandler", "ChromatiCraft:chromaticraft_item_bucket");
+        sendCatalyst("cc.unilock.chromatinei.compat.nei.handler.PoolHandler", "ChromatiCraft:chromaticraft_item_bucket");
     }
 
     private static void sendHandler(String handler, String workstation) {
