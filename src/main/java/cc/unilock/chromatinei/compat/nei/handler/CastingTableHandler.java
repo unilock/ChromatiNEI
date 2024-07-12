@@ -16,6 +16,7 @@ import Reika.ChromatiCraft.Auxiliary.RecipeManagers.RecipesCastingTable;
 import Reika.ChromatiCraft.ChromatiCraft;
 import Reika.ChromatiCraft.GUI.Tile.Inventory.GuiCastingTable;
 import Reika.ChromatiCraft.Magic.ElementTagCompound;
+import Reika.ChromatiCraft.Registry.ChromaItems;
 import Reika.ChromatiCraft.Registry.CrystalElement;
 import Reika.DragonAPI.Instantiable.Recipe.ItemMatch;
 import Reika.DragonAPI.Libraries.IO.ReikaTextureHelper;
@@ -80,6 +81,11 @@ public class CastingTableHandler extends TemplateRecipeHandler {
         public PositionedStack getResult() {
             if (!visible) return null;
             return new PositionedStack(recipe.getOutput(), 66, 4);
+        }
+
+        @Override
+        public PositionedStack getOtherStack() {
+            return new PositionedStack(ChromaItems.HELP.getStackOf().setStackDisplayName("Click for info"), 0, 0);
         }
     }
 
@@ -174,7 +180,7 @@ public class CastingTableHandler extends TemplateRecipeHandler {
     @Override
     public boolean mouseClicked(GuiRecipe<?> gui, int button, int recipe) {
         CachedCastingRecipe c = (CachedCastingRecipe)arecipes.get(recipe);
-        if (c.visible && button == 0 && gui.isMouseOver(c.getResult(), recipe)) {
+        if (c.visible && button == 0 && gui.isMouseOver(c.getOtherStack(), recipe)) {
             CCUtil.loadLexiconRecipe(c.recipe.getOutput());
             return true;
         } else {
