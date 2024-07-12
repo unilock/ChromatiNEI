@@ -59,6 +59,11 @@ public class PoolHandler extends TemplateRecipeHandler {
             if (!visible) return null;
             return new PositionedStack(recipe.getOutput(), 67, 102);
         }
+
+        @Override
+        public PositionedStack getOtherStack() {
+            return new PositionedStack(ChromaItems.HELP.getStackOf().setStackDisplayName("Click for info"), 0, 0);
+        }
     }
 
     @Override
@@ -126,7 +131,7 @@ public class PoolHandler extends TemplateRecipeHandler {
     @Override
     public boolean mouseClicked(GuiRecipe<?> gui, int button, int recipe) {
         CachedPoolRecipe c = (CachedPoolRecipe)arecipes.get(recipe);
-        if (c.visible && button == 0 && gui.isMouseOver(c.getResult(), recipe)) {
+        if (c.visible && button == 0 && gui.isMouseOver(c.getOtherStack(), recipe)) {
             CCUtil.loadLexiconRecipe(c.recipe.getOutput());
             return true;
         } else {
