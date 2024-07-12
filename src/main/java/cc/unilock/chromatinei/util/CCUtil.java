@@ -1,11 +1,16 @@
 package cc.unilock.chromatinei.util;
 
+import Reika.ChromatiCraft.Auxiliary.RecipeManagers.PoolRecipes;
 import Reika.ChromatiCraft.ChromatiCraft;
+import Reika.ChromatiCraft.Registry.ChromaItems;
 import Reika.ChromatiCraft.Registry.ChromaResearch;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class CCUtil {
     public static boolean playerCanSee(ItemStack is) {
@@ -38,5 +43,29 @@ public class CCUtil {
             r = ChromaResearch.TURBOREPEATER;
         }
         return r;
+    }
+
+
+
+    public static Collection<PoolRecipes.PoolRecipe> getAllPoolRecipesUsing(ItemStack ingredient) {
+        if (ReikaItemHelper.matchStacks(ChromaItems.BUCKET.getStackOf(), ingredient)) {
+            return PoolRecipes.instance.getAllPoolRecipes();
+        }
+
+        ArrayList<PoolRecipes.PoolRecipe> li = new ArrayList<>();
+
+        for (PoolRecipes.PoolRecipe recipe : PoolRecipes.instance.getAllPoolRecipes()) {
+            if (ReikaItemHelper.matchStacks(recipe.getMainInput(), ingredient)) {
+                li.add(recipe);
+            } else {
+                for (ItemStack input : recipe.getInputs()) {
+                    if (ReikaItemHelper.matchStacks(input, ingredient)) {
+                        li.add(recipe);
+                    }
+                }
+            }
+        }
+
+        return li;
     }
 }
