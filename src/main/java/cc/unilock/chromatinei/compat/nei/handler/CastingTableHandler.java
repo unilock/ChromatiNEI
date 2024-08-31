@@ -85,6 +85,7 @@ public class CastingTableHandler extends TemplateRecipeHandler {
 
         @Override
         public PositionedStack getOtherStack() {
+            if (!visible) return null;
             return new PositionedStack(ChromaItems.HELP.getStackOf().setStackDisplayName("Click for info"), 0, 0);
         }
     }

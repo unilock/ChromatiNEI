@@ -36,6 +36,7 @@ public class PoolHandler extends TemplateRecipeHandler {
             stacks.add(new PositionedStack(recipe.getMainInput(), 12, 65));
             int i = 0;
             for (ItemStack is : recipe.getInputs()) {
+                if (is.getItem() == null) continue;
                 List<ItemStack> li = null;
                 if (is.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                     li = new ArrayList<>();
@@ -62,6 +63,7 @@ public class PoolHandler extends TemplateRecipeHandler {
 
         @Override
         public PositionedStack getOtherStack() {
+            if (!visible) return null;
             return new PositionedStack(ChromaItems.HELP.getStackOf().setStackDisplayName("Click for info"), 0, 0);
         }
     }
